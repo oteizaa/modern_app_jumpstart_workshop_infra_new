@@ -15,7 +15,5 @@ nginx-ingress:
       port: 9000
     readyStatus:
       initialDelaySeconds: 30
-    serviceAccount:
-      imagePullSecretName: ghcr
   prometheus:
     create: true
