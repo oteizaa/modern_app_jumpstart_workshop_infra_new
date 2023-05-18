@@ -7,8 +7,8 @@ nginx-ingress:
       enable: true
     enableSnippets: true
     image:
-      repository: cavalen/nginx-ingress
-      tag: 2.4.2
+      repository: ghcr.io/oteizaa/nginx-plus-ingress
+      tag: 2.4.0-SNAPSHOT-7956665
     nginxplus: true
     nginxStatus:
       allowCidrs: 0.0.0.0/0
