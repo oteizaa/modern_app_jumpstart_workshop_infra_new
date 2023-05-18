@@ -8,7 +8,7 @@ nginx-ingress:
     enableSnippets: true
     image:
       repository: cavalen/nginx-ingress
-      tag: 3.1.1
+      tag: 3.1.0
     nginxplus: true
     nginxStatus:
       allowCidrs: 0.0.0.0/0
