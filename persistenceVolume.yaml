@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: example-local-pv
+  name: local-pv-01
   labels:
-    name: my-node
+    name: my-node-01
 spec:
   capacity:
-    storage: 500Gi
+    storage: 100M
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -20,4 +20,52 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - my-node
+          - my-node-01
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-02
+  labels:
+    name: my-node-02
+spec:
+  capacity:
+    storage: 100M
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - my-node-02
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-03
+  labels:
+    name: my-node-03
+spec:
+  capacity:
+    storage: 100M
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - my-node-03

@@ -21,6 +21,4 @@ volumeClaimTemplate:
   resources:
     requests:
       storage: 100M
-  selector:
-    matchLabels:
-      name: my-node
+      
