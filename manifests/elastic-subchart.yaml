@@ -13,7 +13,7 @@ spec:
     repoURL: https://github.com/oteizaa/modern_app_jumpstart_workshop_infra_new.git
     targetRevision: HEAD
   destination:
-    namespace: monitoring
+    namespace: default
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
