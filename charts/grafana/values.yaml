@@ -37,5 +37,4 @@ grafana:
         url: https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/main/grafana/NGINXPlusICDashboard.json
         datasource: Prometheus
   service:
-    type: NodePort
-    nodePort: 32517
+    type: LoadBalancer
