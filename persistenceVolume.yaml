@@ -1,41 +1,12 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: elk-master
-  labels:
-    type: local
+  name: my-elasticsearch-pv
 spec:
   capacity:
-    storage: 4Gi
+    storage: 500Mi
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard-rwo
   hostPath:
-    path: "/mnt/data"
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: elk-logstash
-  labels:
-    type: local
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: elk-data
-  labels:
-    type: local
-spec:
-  capacity:
-    storage: 30Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
+    path: /mnt/data
