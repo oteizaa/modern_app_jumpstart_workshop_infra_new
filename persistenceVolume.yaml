@@ -1,71 +1,44 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-pv-01
+  name: pv-volume-01
   labels:
-    name: my-node-01
+    type: local
 spec:
+  storageClassName: manual
   capacity:
     storage: 100M
   accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /mnt/disks/vol1
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - my-node-01
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-pv-02
+  name: pv-volume-02
   labels:
-    name: my-node-02
+    type: local
 spec:
+  storageClassName: manual
   capacity:
     storage: 100M
   accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /mnt/disks/vol1
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - my-node-02
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: local-pv-03
+  name: pv-volume-03
   labels:
-    name: my-node-03
+    type: local
 spec:
+  storageClassName: manual
   capacity:
     storage: 100M
   accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  local:
-    path: /mnt/disks/vol1
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - my-node-03
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
