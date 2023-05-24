@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: charts/grafana
-    repoURL: https://github.com/oteizaa/modern_app_jumpstart_workshop_infra.git
+    repoURL: https://github.com/oteizaa/modern_app_jumpstart_workshop_infra_new.git
     targetRevision: HEAD
   destination:
     namespace: monitoring
