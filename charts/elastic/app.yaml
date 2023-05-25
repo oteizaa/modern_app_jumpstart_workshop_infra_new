@@ -4,8 +4,6 @@ metadata:
   name: quickstart
   namespace: monitoring
 spec:
-  config:
-    xpack.security.enabled: false
   version: 8.8.0
   nodeSets:
   - name: default
