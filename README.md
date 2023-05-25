@@ -15,3 +15,8 @@ kubectl apply -f https://download.elastic.co/downloads/eck/2.7.0/operator.yaml
 Dashboard NAP:
 
 https://github.com/f5devcentral/f5-waf-elk-dashboards
+
+
+Upgrade htpassword file:
+
+echo -n 'elastic:password' | base64

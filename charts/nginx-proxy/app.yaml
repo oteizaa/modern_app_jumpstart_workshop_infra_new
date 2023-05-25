@@ -86,7 +86,7 @@ metadata:
   name: htpasswd-secret
 type: Opaque
 data:
-  .htpasswd: ZWxhc3RpYzokYXByMSQ5Mk1UUjZZcCQ1LzVlMm44VUxhUEN0L1lNYUZ5MEQw
+  .htpasswd: ZWxhc3RpYzoyZzBIckEzNWc2RDdMY3NCVDI2MDJYUHc=
 ---
 apiVersion: v1
 kind: Service
