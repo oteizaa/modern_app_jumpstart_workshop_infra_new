@@ -61,7 +61,7 @@ data:
 
         server {
             listen 9200;
-            server_name my_elastic;
+            server_name nginx-service.monitoring.svc.cluster.local;
 
             location / {
                 auth_basic "Restricted Content";
