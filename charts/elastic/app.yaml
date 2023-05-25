@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0-arm64
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0-amd64
           ports:
             - containerPort: 9200
 ---
