@@ -1,51 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
 metadata:
-  name: elk
+  name: quickstart
   namespace: monitoring
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: elk
-  template:
-    metadata:
-      labels:
-        app: elk
-    spec:
-      containers:
-        - name: elk
-          image: sebp/elk
-          ports:
-            - containerPort: 9200
-              name: elastic
-              protocol: TCP
-            - containerPort: 5601
-              name: kibana
-              protocol: TCP
-            - containerPort: 5044
-              name: logstash
-              protocol: TCP
+  version: 8.8.0
+  nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.store.allow_mmap: false
 ---
-apiVersion: v1
-kind: Service
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
 metadata:
-  name: elk
+  name: quickstart
   namespace: monitoring
 spec:
-  ports:
-    - port: 9200
-      targetPort: 9200
-      protocol: TCP
-      name: elastic
-    - port: 5601
-      targetPort: 5601
-      protocol: TCP
-      name: kibana
-    - port: 5044
-      targetPort: 5044
-      protocol: TCP
-      name: logstash
-  selector:
-    app: elk
-  type: LoadBalancer
+  version: 8.8.0
+  count: 1
+  elasticsearchRef:
+    name: quickstart
