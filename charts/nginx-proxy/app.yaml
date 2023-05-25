@@ -89,14 +89,6 @@ data:
   .htpasswd: ZWxhc3RpYzokYXByMSQ5Mk1UUjZZcCQ1LzVlMm44VUxhUEN0L1lNYUZ5MEQw
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: htpasswd-secret
-type: Opaque
-data:
-  .htpasswd: <base64_encoded_htpasswd_file_content>
----
-apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
