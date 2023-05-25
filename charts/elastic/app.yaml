@@ -5,7 +5,11 @@ metadata:
   namespace: monitoring
 spec:
   config:
-    xpack.security.enabled: false 
+    xpack.security.authc:
+        anonymous:
+          username: anonymous
+          roles: superuser
+          authz_exception: false
   version: 8.8.0
   nodeSets:
   - name: default
