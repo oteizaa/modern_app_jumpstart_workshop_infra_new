@@ -18,10 +18,13 @@ spec:
         image: nginx
         ports:
         - containerPort: 9200
+        - containerPort: 9243
         volumeMounts:
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+        - name: ssl-certs
+          mountPath: /etc/nginx/ssl
         - name: htpasswd-file
           mountPath: /etc/nginx/.htpasswd
           subPath: .htpasswd
@@ -35,6 +38,9 @@ spec:
       - name: htpasswd-file
         secret:
           secretName: htpasswd-secret
+      - name: ssl-certs
+        secret:
+          secretName: ssl-certs
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -64,18 +70,43 @@ data:
             server_name nginx-service.monitoring.svc.cluster.local;
 
             location / {
-                auth_basic "Restricted Content";
-                auth_basic_user_file /etc/nginx/.htpasswd;
+                proxy_pass https://elasticsearch_server;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+
+        }
+
+        server {
+            listen 9243 ssl;
+            server_name nginx-service.monitoring.svc.cluster.local;
+
+            # SSL/TLS certificate paths
+            ssl_certificate /etc/nginx/ssl/tls.crt;
+            ssl_certificate_key /etc/nginx/ssl/tls.key;
+
+
+            # SSL/TLS configuration
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_prefer_server_ciphers on;
+            ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+            ssl_ecdh_curve secp384r1;
+
+            location / {
                 proxy_pass https://elasticsearch_server;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-                proxy_ssl_verify off;
-                proxy_ssl_verify_depth 0;
+                auth_basic "Restricted Content";
+                auth_basic_user_file /etc/nginx/.htpasswd;
             }
-
         }
+
+
+
+
 
         upstream elasticsearch_server {
             server quickstart-es-http.monitoring.svc.cluster.local:9200;
@@ -92,6 +123,94 @@ data:
   .htpasswd: ZWxhc3RpYzoyZzBIckEzNWc2RDdMY3NCVDI2MDJYUHc=
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: ssl-certs
+type: Opaque
+data:
+  tls.crt: MIIFnjCCA4YCCQCbcBYySPivpjANBgkqhkiG9w0BAQsFADCBkDELMAkGA1UEBhMC
+VVMxCzAJBgNVBAgMAkZMMQwwCgYDVQQHDANNSUExFDASBgNVBAoMC0NvbXBhbnlO
+YW1lMRswGQYDVQQLDBJDb21wYW55U2VjdGlvbk5hbWUxMzAxBgNVBAMMKm5naW54
+LXNlcnZpY2UubW9uaXRvcmluZy5zdmMuY2x1c3Rlci5sb2NhbDAeFw0yMzA1MjYw
+MzA3MDJaFw0zMzA1MjMwMzA3MDJaMIGQMQswCQYDVQQGEwJVUzELMAkGA1UECAwC
+RkwxDDAKBgNVBAcMA01JQTEUMBIGA1UECgwLQ29tcGFueU5hbWUxGzAZBgNVBAsM
+EkNvbXBhbnlTZWN0aW9uTmFtZTEzMDEGA1UEAwwqbmdpbngtc2VydmljZS5tb25p
+dG9yaW5nLnN2Yy5jbHVzdGVyLmxvY2FsMIICIjANBgkqhkiG9w0BAQEFAAOCAg8A
+MIICCgKCAgEAsGJ1x4sDQsF6VEJ+wfpA12zJ1zrd+YlUbTAtA7AjsRZHxnjCz6d8
+79AG2lomGHp5DvNL9S1SVIvixSH+qn5/LNu66W8bifS8x8aLJ2eQ6ddFTrD3m39o
+9UQn+hB+PdwmIhR8A/ctyAh35I9QUZ9O1fve5vfBYgaO019k9uFDP7Dbc2Po1bJE
+QilRJm0+gZ55DKnqTM0ejAlklwcNz1Hcmi/QH1Sn5354WKLNBNAHnWtRIz3vMOCf
+2Tb6j6kN9LbeDEzPC1rivQo0lI6ca1QeLc4D8B1U2JWUn6BrxZYqeROTDcKzgEUc
+0qMWtAHbIJH1J8v/iHYjB4eyvWyjt2zu47Ee/XcCbR3SXQh/WClooH0Fuj20y5tC
+SqLO1aBHn/U0YL+BGfI73x6BrBm9q8xExOpRIKjuyQniXllILF1BkOu4nA/hE1It
+xfDvx0UIs+5qqd0CgcT7+MREcYNERK2icHMrxNah4TzO//DS04OPeDUHCEIcOqoG
++O5oj3ZMEjaNjlxeWEnRZ4zxQ4pQ5t8m+l2waGZA16nMYyfFuB6tJhO2vrMnR7dX
+oH8DVGySiNGTiou9kIodUOvlO3+5ijBZw0TapZXvWYo6cuZANSAge31Lm4W7XosH
+1rZ/0Cjz7H3WB+k2A9Yykv5GPopAXGOYShGAIqOhAh8Tmk7KuubQGJsCAwEAATAN
+BgkqhkiG9w0BAQsFAAOCAgEAFVYdXHyJJZbQhC1No/WHZY6l8So6z8LRMfHebjni
+9og63TzBaAnpBmfuqNGIV4haePGF6G+pRaY1hn25FbvswZ2ONUWSqguaTpXHhdGg
+KhrswO7RG/GTklVtTE7evb9WLQZVuMdonVXd/HKxg+/sdyxxGvYTqcgbCZRvTP4r
+tq+NtPtHeZFqc1zScTYTdWy0f6ia0NVqdTAwJH7VEHvjOTh6iS44iLNZ7Dq7UWIt
+pIWMBmHL+o6+iAzWjaR5Iw7vhGe8Nn7S/iyW5066h2kJeipVGxYnFJop+j/n4LI5
+AZHwFqxO5m9PwUb1+Cd20BEjPQNNahF/RMkvEsj9eP2Fcx43dqkOu2Yq5XST7s2V
+ZGMJtKlAB3K1gqfYuJsAkbB2y/Ibid2NcwS8mHkPAIrleevmATSdKtY+vhEIG5Zg
+w7YsTDg6T6YbO5fiJUL4JhOXNOWLBw5AIWcSvyUXgWVsmwR8g3gF1EAGRpvBx0bN
+/fUW/N7eI6VGwcdPJwXAwRAYwJa7lUkiF1f2f52eewTQaiMHBjM+TpJc5embln4p
+ZVQ91TzxSqyMlpOPmcP0zkGgJK3XYlzxBt0nodMmBXk9zYfD8g3NeVGKoTtUkTmK
+ROcq+OqAV7KrYWdQzwuP9jek/eXXyU1X6VoizTSQu5yKLlshmudZml3x9PJ5Z22j
+Vng=
+  tls.key: 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
+Q192HhnNH2AP3jsyV4geCj0c4pqe2Vs=
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
@@ -102,4 +221,7 @@ spec:
     - protocol: TCP
       port: 9200
       targetPort: 9200
+    - protocol: TCP
+      port: 9243
+      targetPort: 9243
   type: ClusterIP
