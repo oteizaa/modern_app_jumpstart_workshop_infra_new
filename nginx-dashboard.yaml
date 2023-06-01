@@ -8,7 +8,11 @@ spec:
   - name: dash
     port: 9000
     protocol: TCP
-    targetPort: 9000  
+    targetPort: 9000
+  - name: svcinsight
+    port: 9114
+    protocol: TCP
+    targetPort: 9114    
   selector:
     app.kubernetes.io/instance: nginx-plus-ingress
     app.kubernetes.io/name: nginx-ingress
