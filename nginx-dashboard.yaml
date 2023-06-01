@@ -30,7 +30,13 @@ spec:
     - name: nginx-dashboard
       service: nginx-dashboard
       port: 9000
+    - name: nginx-svcinsights
+      service: nginx-dashboard
+      port: 9114
   routes:
     - path: /
       action:
         pass: nginx-dashboard
+    - path: /probe
+      action:
+        pass: nginx-svcinsights
