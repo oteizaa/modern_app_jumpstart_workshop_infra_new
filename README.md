@@ -17,11 +17,9 @@ Dashboard NAP:
 https://github.com/f5devcentral/f5-waf-elk-dashboards
 
 
-Upgrade htpassword file:
 
-echo -n 'elastic:password' | base64
 
-KIBANA_URL=https://34.71.64.118:5601
+KIBANA_URL=https://XX.XX.XX.XX:5601
 
 jq -s . kibana/overview-dashboard.ndjson | jq '{"objects": . }' | \
 curl -k --location --request POST "$KIBANA_URL/api/kibana/dashboards/import" -u "elastic:xxxxxxxxx"\
