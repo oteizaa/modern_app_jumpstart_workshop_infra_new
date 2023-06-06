@@ -6,6 +6,7 @@ nginx-ingress:
     appprotectdos:
       enable: true
     enableSnippets: true
+    enableServiceInsight: true
     image:
       repository: cavalen/nginx-ingress
       tag: 3.1.1
