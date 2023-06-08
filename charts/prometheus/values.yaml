@@ -2,3 +2,5 @@
 prometheus:
   pushgateway:
     enabled: false
+  service:
+    type: LoadBalancer
