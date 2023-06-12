@@ -10,13 +10,24 @@ spec:
     - name: nginx-dashboard
       service: nginx-dashboard
       port: 9000
-    - name: nginx-svcinsights
-      service: nginx-dashboard
-      port: 9114
   routes:
     - path: /
       action:
-        pass: nginx-status
-    - path: /probe
+        pass: nginx-dashboard
+---
+---
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  host: prometheus.f5demo.com
+  upstreams:
+    - name: prometheus-server
+      service: prometheus-server
+      port: 80
+  routes:
+    - path: /
       action:
-        pass: nginx-insight
+        pass: prometheus-server
